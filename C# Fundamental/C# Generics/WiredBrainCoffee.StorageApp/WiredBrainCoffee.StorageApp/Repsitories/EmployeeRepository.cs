@@ -3,18 +3,28 @@ using WiredBrainCoffee.StorageApp.Entities;
 
 namespace WiredBrainCoffee.StorageApp.Repsitories
 {
-   public class EmployeeRepository
+   public class GenericRepository<T,TKey>
     {
-        private readonly List<Employee> employees = new ();
-        public void Add(Employee employee ) {
-            employees.Add(employee);
+        public TKey? key { get; set; }
+        protected readonly List<T> _items = new ();
+        public void Add(T item ) {
+            _items.Add(item);
         }
 
         public void Save() {
-            foreach (Employee employee in employees)
+            foreach (T item in _items)
             {
-                System.Console.WriteLine(employee);
+                System.Console.WriteLine(item);
             }
         }
     }
+
+    public class GenericRepositoryWithRemove <T> : GenericRepository<T , string>
+    {
+        public void Remove(T item)
+        {
+            _items.Remove(item);
+        }
+    }
+    
 }
