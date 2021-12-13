@@ -30,7 +30,17 @@ namespace WiredBrainCoffee.StorageApp
 
         private static void AddManagers(IWriteRepsitory<Manager> managerRepository)
         {
-            managerRepository.Add(new Manager { Firstname = "Mark Z." });
+            var MarkManager = new Manager { Firstname = "Mark Z." };
+           var MarkManagerCopy =  MarkManager.Copy<Manager>();
+            managerRepository.Add(MarkManager);
+            if (MarkManagerCopy is not null)
+            {
+                MarkManagerCopy.Firstname += "_Copy";
+                managerRepository.Add(MarkManagerCopy);
+            }
+
+            managerRepository.Add(MarkManager);
+
             managerRepository.Add(new Manager { Firstname = "Steve J." });
 
             managerRepository.Save();
@@ -67,7 +77,7 @@ namespace WiredBrainCoffee.StorageApp
 
             };
 
-            Addbatch<Employee>(employeeRepository, employees);
+            employeeRepository.Addbatch(employees);
         }
 
         private static void AddOrganizatations(IRepository<Organization> organizationRepository)
@@ -79,18 +89,10 @@ namespace WiredBrainCoffee.StorageApp
                  new Organization { Name = "Google" }
 
              };
-            Addbatch(organizationRepository, organizations);
+            organizationRepository.Addbatch<Organization>(organizations);
            
         }
 
-        private static void Addbatch<T>(IWriteRepsitory<T> Repository, T[] items)
-            where T : IEnity
-        {
-            foreach (T item in items)
-            {
-                Repository.Add(item);
-            }
-            Repository.Save();
-        }
+       
     }
 }
