@@ -4,14 +4,9 @@ using WiredBrainCoffee.StorageApp.Entities;
 
 namespace WiredBrainCoffee.StorageApp.Repsitories
 {
-   public class GenericRepository<T> where T: class, IEnity, new ()
+    public class ListRepository<T> : IRepository<T> where T : IEnity  
     {
         private readonly List<T> _items = new ();
-
-        public T CreateItem() {
-
-            return new T();
-        }
 
         public T GetById(int id) 
         {
@@ -27,7 +22,8 @@ namespace WiredBrainCoffee.StorageApp.Repsitories
         }
 
 
-        public void Save() {
+        public void Save() 
+        {
             foreach (T item in _items)
             {
                 System.Console.WriteLine(item);
@@ -35,6 +31,5 @@ namespace WiredBrainCoffee.StorageApp.Repsitories
         }
     }
 
-  
-    
+
 }
