@@ -9,7 +9,8 @@ namespace WiredBrainCoffee.StorageApp
     {
         static void Main(string[] args)
         {
-            var employeeRepository = new SqlRepository<Employee>(new StorageAppDbContext());
+            var itemAdded = new ItemAdded(EmployeeAdded);
+            var employeeRepository = new SqlRepository<Employee>(new StorageAppDbContext() ,itemAdded);
             AddEmployee(employeeRepository);
             GetEmployeeById(employeeRepository);
             AddManagers(employeeRepository);
@@ -26,6 +27,12 @@ namespace WiredBrainCoffee.StorageApp
             IReadRepository<IEnity> repo1 = new ListRepository<Organization>();
           
             Console.ReadLine();
+        }
+
+        private static void EmployeeAdded(object item)
+        {
+            var employee = (Employee)item;
+            Console.WriteLine($"Employee added => {employee.Firstname }");
         }
 
         private static void AddManagers(IWriteRepsitory<Manager> managerRepository)
