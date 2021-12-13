@@ -9,14 +9,17 @@ namespace WiredBrainCoffee.StorageApp
     {
         static void Main(string[] args)
         {
-            var itemAdded = new ItemAdded(EmployeeAdded);
-            var employeeRepository = new SqlRepository<Employee>(new StorageAppDbContext() ,itemAdded);
+           // ItemAdded<Employee> itemAdded = new ItemAdded<Employee>(EmployeeAdded);
+            var employeeRepository = new SqlRepository<Employee>(new StorageAppDbContext(), EmployeeAdded);
+
+          //  ItemAdded<Manager> managerAdded = itemAdded;
+
             AddEmployee(employeeRepository);
             GetEmployeeById(employeeRepository);
             AddManagers(employeeRepository);
             //Contravariance 
             IWriteRepsitory<Manager> repo = new SqlRepository<Employee>(new StorageAppDbContext());
-         
+
             var organizationRepository = new ListRepository<Organization>();
             AddOrganizatations(organizationRepository);
             GetOrganizationById(organizationRepository);
@@ -25,20 +28,20 @@ namespace WiredBrainCoffee.StorageApp
             WriteAllToConsole(organizationRepository);
             //Covariance 
             IReadRepository<IEnity> repo1 = new ListRepository<Organization>();
-          
+
             Console.ReadLine();
         }
 
-        private static void EmployeeAdded(object item)
+        private static void EmployeeAdded(Employee employee)
         {
-            var employee = (Employee)item;
+
             Console.WriteLine($"Employee added => {employee.Firstname }");
         }
 
         private static void AddManagers(IWriteRepsitory<Manager> managerRepository)
         {
             var MarkManager = new Manager { Firstname = "Mark Z." };
-           var MarkManagerCopy =  MarkManager.Copy<Manager>();
+            var MarkManagerCopy = MarkManager.Copy<Manager>();
             managerRepository.Add(MarkManager);
             if (MarkManagerCopy is not null)
             {
@@ -97,9 +100,9 @@ namespace WiredBrainCoffee.StorageApp
 
              };
             organizationRepository.Addbatch<Organization>(organizations);
-           
+
         }
 
-       
+
     }
 }
