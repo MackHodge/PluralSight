@@ -12,12 +12,37 @@ namespace WiredBrainCoffee.StorageApp
             var employeeRepository = new SqlRepository<Employee>(new StorageAppDbContext());
             AddEmployee(employeeRepository);
             GetEmployeeById(employeeRepository);
-
-
+            AddManagers(employeeRepository);
+            //Contravariance 
+            IWriteRepsitory<Manager> repo = new SqlRepository<Employee>(new StorageAppDbContext());
+         
             var organizationRepository = new ListRepository<Organization>();
             AddOrganizatations(organizationRepository);
             GetOrganizationById(organizationRepository);
+
+            WriteAllToConsole(employeeRepository);
+            WriteAllToConsole(organizationRepository);
+            //Covariance 
+            IReadRepository<IEnity> repo1 = new ListRepository<Organization>();
+          
             Console.ReadLine();
+        }
+
+        private static void AddManagers(IWriteRepsitory<Manager> managerRepository)
+        {
+            managerRepository.Add(new Manager { Firstname = "Mark Z." });
+            managerRepository.Add(new Manager { Firstname = "Steve J." });
+
+            managerRepository.Save();
+        }
+
+        private static void WriteAllToConsole(IReadRepository<IEnity> Repository)
+        {
+            var items = Repository.GetAll();
+            foreach (var item in items)
+            {
+                Console.WriteLine(item);
+            }
         }
 
         private static void GetOrganizationById(IRepository<Organization> organizationRepository)
@@ -43,9 +68,23 @@ namespace WiredBrainCoffee.StorageApp
 
         private static void AddOrganizatations(IRepository<Organization> organizationRepository)
         {
-            organizationRepository.Add(new Organization { Name = "Tesla" });
-            organizationRepository.Add(new Organization { Name = "Spacex" });
-            organizationRepository.Add(new Organization { Name = "Google" });
+            var organizations = new[]
+            {
+                  new Organization { Name = "Tesla" },
+                 new Organization { Name = "Spacex" },
+                 new Organization { Name = "Google" }
+
+             };
+            Addbatch(organizationRepository, organizations);
+           
+        }
+
+        private static void Addbatch(IRepository<Organization> organizationRepository, Organization[] organizations)
+        {
+            foreach (Organization item in organizations)
+            {
+                organizationRepository.Add(item);
+            }
             organizationRepository.Save();
         }
     }

@@ -21,14 +21,20 @@ namespace WiredBrainCoffee.StorageApp.Repsitories
             _items.Remove(item);
         }
 
+        public IEnumerable<T> GetAll()
+        {
+            return _items.ToList();
+        }
 
         public void Save() 
         {
             foreach (T item in _items)
             {
-                System.Console.WriteLine(item);
+               //Everything is saved already in the List<T> (read, list of Type T)
             }
         }
+
+        
     }
 
 

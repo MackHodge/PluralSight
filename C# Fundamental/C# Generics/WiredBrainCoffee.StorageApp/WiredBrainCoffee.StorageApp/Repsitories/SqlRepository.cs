@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
 using WiredBrainCoffee.StorageApp.Entities;
 
 namespace WiredBrainCoffee.StorageApp.Repsitories
@@ -18,6 +20,10 @@ namespace WiredBrainCoffee.StorageApp.Repsitories
         {
             return _dbSet.Find(id);
         }
+        public IEnumerable<T> GetAll()
+        {
+            return _dbSet.OrderBy(item => item.Id ).ToList();
+        }
         public void Add(T item)
         {
             _dbSet.Add(item);
@@ -28,11 +34,12 @@ namespace WiredBrainCoffee.StorageApp.Repsitories
             _dbSet.Remove(item);
         }
 
-
         public void Save()
         {
             _dbContext.SaveChanges();
         }
+
+       
     }
 
 
