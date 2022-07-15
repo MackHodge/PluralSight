@@ -1,14 +1,15 @@
 <div class='card'>
     <div class="card-header">
-        {{pageTitle}}
+        <!--Bind the Page title (Defined in the product-list.component.ts)-->
+        {{productListTitle}}
     </div>
+    <!--This is bootstrap row therfore filter is on col-md-2 / col-md-4 we bind the filter -->
     <div class="card-body">
         <div class="row">
             <div class="col-md-2">Filter by:</div>
             <div class="col-md-4">
                 <input type="text"  
-                [(ngModel)]="listFilter"/>
-                
+                [(ngModel)]="listFilter"/>           
             </div>
         </div>
         <div class="row">
@@ -20,8 +21,10 @@
                 <thead>
                     <tr >
                         <th id="main th">
+                            <!--Click is an event -->
                             <button class="btn btn-primary"
-                            (click) = "toggleImage()">                               
+                            (click) = "toggleImage()">
+                            <!--Ternary operator -->                               
                                 {{showImage ? 'Hide':'Show' }} Image
                             </button>
                         </th>
@@ -46,9 +49,9 @@
                             <td>{{product.productCode | ConvertToSpaces: '-'}}</td> 
                             <td>{{product.releaseDate}}</td> 
                             <td>{{product.price | currency: 'EUR' : 'symbol':'1.2-2'}}</td> 
+                             <!--Property binding to get the component from the @output() --> 
                             <td><pm-star [rating]="product.starRating" (ratingStarsClicked)="onRatingStarsClicked($event)"
-                                >
-                            
+                                >                          
                             </pm-star>
                         </td> 
                         </tr>                  
