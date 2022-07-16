@@ -1,4 +1,5 @@
-import { Component, OnInit  } from '@angular/core' 
+import { Component, OnDestroy, OnInit  } from '@angular/core' 
+import { Subscription } from 'rxjs';
 import { IProduct } from './product';
 import { ProductService } from './product.service';
 
@@ -11,7 +12,7 @@ import { ProductService } from './product.service';
 })
 
 //export the class so its available in other part of the application 
-export class ProductListComponent implements OnInit{
+export class ProductListComponent implements OnInit, OnDestroy {
   private _productService; 
   
   constructor(productService : ProductService) {
@@ -22,6 +23,9 @@ export class ProductListComponent implements OnInit{
     imageWidth = 50;
     imageMargin = 2;
     showImage = false;
+    errorMessage: string = '';
+    //! tells the Typescript compiler that we will handle the assignment later 
+    sub! : Subscription ; 
     //this is typescript 
     private _listFilter: string = '';
     get listFilter(): string {
@@ -36,38 +40,7 @@ export class ProductListComponent implements OnInit{
 
     filteredProducts: IProduct [] = [];
 //array in typescript 
-    products : IProduct [] = [
-    {
-      "productId": 2,
-      "productName": "Garden Cart",
-      "productCode": "GDN-0023",
-      "releaseDate": "March 18, 2021",
-      "description": "15 gallon capacity rolling garden cart",
-      "price": 32.99,
-      "starRating": 2.2,
-      "imageUrl": "assets/images/garden_cart.png"
-    },
-    {
-      "productId": 5,
-      "productName": "Hammer",
-      "productCode": "TBX-0048",
-      "releaseDate": "May 21, 2021",
-      "description": "Curved claw steel hammer",
-      "price": 8.9,
-      "starRating": 4.8,
-      "imageUrl": "assets/images/hammer.png"
-    }, 
-    {
-      "productId": 6,
-      "productName": "Bin",
-      "productCode": "TTX-0048",
-      "releaseDate": "May 21, 2022",
-      "description": "Curved claw steel hammer",
-      "price": 2.9,
-      "starRating": 1.8,
-      "imageUrl": "assets/images/hammer.png"
-    }
-  ];
+    products : IProduct [] = []; 
 
   //Method in typescript 
   toggleImage():  void {
@@ -76,7 +49,20 @@ export class ProductListComponent implements OnInit{
 
 
   ngOnInit(): void {
-   console.log("initialized method");
+    //hmmm
+    this.sub = this._productService.getProduct().subscribe({
+
+      next: products => {
+        this.products = products;
+        this.filteredProducts = this.products;
+      },
+      error : err => this.errorMessage = err  
+      
+    });
+}
+
+ngOnDestroy(): void {
+    this.sub.unsubscribe();
 }
 
 performFilter(productToFilter : string) : IProduct [] {

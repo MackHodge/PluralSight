@@ -6,15 +6,22 @@ import { Component } from "@angular/core";
  template: `
  <div> 
   <!--Angular looks in the app.component.ts for the pm-products-->
-<h1>{{pagetitle}} </h1>
-<div>My First Component</div> 
-<p> {{number}} </p>
-<pm-products></pm-products>
- </div>`  
+
+<nav class='navbar navbar-expand navbar-light bg-light'> 
+  <a class='navbar-brand' >{{pageTitle}} </a>
+  <ul class="nav nav-pills">
+    <li><a class='nav-link'>Home</a></li>
+    <li><a class='nav-link'>Product List</a></li>
+  </ul>
+</nav>
+<div class='container'> 
+<router-outlet></router-outlet>
+</div> 
+`  
 })    
  
 export class AppComponent {
   //Typescript variable 
-pagetitle : string = 'Product Management'  
+pageTitle : string = 'Product Management'  
 number : string = ""
 } 
